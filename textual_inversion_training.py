@@ -126,9 +126,9 @@ def training_function(text_encoder, vae, unet, train_batch_size, gradient_accumu
     progress_bar.set_description("Steps")
     global_step = 0
 
-    for epoch in range(num_train_epochs):
+    for _ in range(num_train_epochs):
         text_encoder.train()
-        for step, batch in enumerate(train_dataloader):
+        for batch in train_dataloader:
             with accelerator.accumulate(text_encoder):
                 latents = vae.encode(batch["pixel_values"]).latent_dist.sample().detach() * 0.18215
                 noise = torch.randn(latents.shape).to(latents.device)
